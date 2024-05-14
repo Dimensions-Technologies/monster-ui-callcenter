@@ -269,6 +269,7 @@ var app = {
 	},*/
 
 	poll_agents: function (global_data, _container) {
+
 		var self = this,
 			container = _container,
 			polling_interval = 6,
@@ -282,6 +283,7 @@ var app = {
 					agents: current_global_data.agents,
 					queues: current_global_data.queues
 				}); //copy without reference;
+
 				if (stop_light_polling === false) {
 					monster.parallel({
 							queues_stats: function (callback) {
@@ -295,10 +297,15 @@ var app = {
 								});
 							},
 							agents_status: function (callback) {
-								self.get_agents_status(function (data) {
+
+								self.get_agents_status(
+									function(data) {
+										if (typeof data === 'undefined') {
+											stop_light_polling = true
+										}
 										callback(null, data);
 									},
-									function (data) {
+									function(data) {
 										callback(null, {});
 									}
 								);
@@ -359,11 +366,19 @@ var app = {
 			resource: 'callcenter.agents.status',
 			data: {
 				accountId: self.accountId,
-				generateError: false
+				//generateError: false
 			},
 			success: function (data) {
 				callback(data.data);
-			}
+			},
+
+			error: function(data) {
+				callback(data.data);	
+			},
+
+			generateError: false
+
+
 		});
 	},
 
