@@ -1427,9 +1427,17 @@ var app = {
 				queues: results.queues,
 				agents: results.agents,
 				agents_stats: results.agents_stats,
-				queues_stats: results.queues_stats,
-				agents_status: results.agents_status
+				queues_stats: results.queues_stats
 			};
+
+			// handle no agents being configured on the account
+			if (typeof results.agents_status == 'undefined' || results.agents_status == 'No agents found') {
+				
+			}
+
+			else {
+				_data.agents_status = results.agents_status;
+			}
 
 			_data = self.format_data(_data);
 
